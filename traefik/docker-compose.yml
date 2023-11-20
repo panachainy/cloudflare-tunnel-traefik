@@ -51,3 +51,42 @@ services:
       - "traefik.http.routers.whoami.tls.certresolver=myresolver"
     networks:
       - backend
+
+## Another example
+# version: "3.1"
+
+# services:
+#   reverse-proxy:
+#     image: traefik:v2.10.5
+#     command:
+#       - --entrypoints.websecure.address=:443
+#       - --api.insecure=true
+#       - --providers.docker=true
+#       - --certificatesresolvers.let.acme.email=your@gmail.com
+#       - --certificatesResolvers.let.acme.tlsChallenge=true
+#       - --certificatesresolvers.let.acme.storage=/acme.json
+
+#     ports:
+#       - "443:443"
+#       - "8080:8080"
+
+#     volumes:
+#       - /var/run/docker.sock:/var/run/docker.sock
+#       - "./acme.json:/acme.json"
+
+#   backend:
+#     # build:
+#     #   context: .
+#     #   dockerfile: "../Dockerfile"
+#     image: example-be
+#     container_name: "backend"
+
+#     labels:
+#       - traefik.enable=true
+#       - traefik.http.routers.backend.rule=PathPrefix(`/ex-prefix`) && Host(`on-the-everything.work`)
+#       - traefik.http.services.backend.loadbalancer.server.port=80
+#       - traefik.http.routers.backend.tls=true
+#       - traefik.http.routers.backend.entrypoints=websecure
+#       - traefik.http.routers.backend.tls.certresolver=let
+#       - traefik.http.routers.backend.middlewares=st
+#       - traefik.http.middlewares.st.stripprefix.prefixes=/ex-prefix
