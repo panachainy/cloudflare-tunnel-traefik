@@ -1,5 +1,9 @@
 version: "3.3"
 
+networks:
+  backend:
+    external: true
+
 services:
   traefik:
     image: "traefik:v2.10"
@@ -14,12 +18,16 @@ services:
       #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
       - "--certificatesresolvers.myresolver.acme.email=panachai.ny@gmail.com"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
-    ports:
-      - "443:443"
-      - "8080:8080"
+    ## If use cloudflare tunnel no need to export port out from docker network
+    # ports:
+    #   - "443:443"
+    #   - "8080:8080"
     volumes:
       - "./letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - ./config:/etc/traefik
+    networks:
+      - backend
 
   whoami:
     image: "traefik/whoami"
@@ -32,3 +40,5 @@ services:
       - "traefik.http.routers.whoami.rule=Host(`whoami.on-the-everything.work`)"
       - "traefik.http.routers.whoami.entrypoints=websecure"
       - "traefik.http.routers.whoami.tls.certresolver=myresolver"
+    networks:
+      - backend
