@@ -28,7 +28,7 @@ services:
     ## If use cloudflare tunnel no need to export port out from docker network
     ports:
       - "443:443"
-      # - "80:80"
+      - "80:80"
       - "8080:8080" # don't enable 8080 on production.
     volumes:
       - "./letsencrypt:/letsencrypt"
@@ -45,7 +45,7 @@ services:
       - traefik
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.whoami.rule=Host(`whoami.on-the-everything.work`)"
+      - "traefik.http.routers.whoami.rule=Host(`t.on-the-everything.work`)"
       - "traefik.http.routers.whoami.entrypoints=web, websecure"
       - "traefik.http.routers.whoami.tls=true"
       - "traefik.http.routers.whoami.tls.certresolver=myresolver"
