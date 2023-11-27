@@ -1,7 +1,11 @@
 version: "3.3"
 
-services:
+networks:
+  proxy:
+    name: proxy
+    external: true
 
+services:
   traefik:
     image: "traefik:v2.10.5"
     container_name: "traefik"
@@ -13,7 +17,8 @@ services:
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.mytlschallenge.acme.tlschallenge=true"
-      #- "--certificatesresolvers.mytlschallenge.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      # # `acme-staging` for develop
+      # - "--certificatesresolvers.mytlschallenge.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
       - "--certificatesresolvers.mytlschallenge.acme.email=panachai.ny@gmail.com"
       - "--certificatesresolvers.mytlschallenge.acme.storage=/letsencrypt/acme.json"
     ports:
@@ -23,6 +28,8 @@ services:
     volumes:
       - "./letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    networks:
+      - proxy
 
   whoami:
     image: "containous/whoami"
@@ -32,3 +39,5 @@ services:
       - "traefik.http.routers.whoami.rule=Host(`test.on-the-everything.work`)"
       - "traefik.http.routers.whoami.entrypoints=websecure"
       - "traefik.http.routers.whoami.tls.certresolver=mytlschallenge"
+    networks:
+      - proxy
