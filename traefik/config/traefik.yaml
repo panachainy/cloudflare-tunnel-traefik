@@ -5,9 +5,9 @@ global:
 # -- (Optional) Change Log Level and Format here...
 #     - loglevels [DEBUG, INFO, WARNING, ERROR, CRITICAL]
 #     - format [common, json, logfmt]
-# log:
-#  level: ERROR
-#  format: common
+log:
+ level: DEBUG
+ format: common
 #  filePath: /var/log/traefik/traefik.log
 
 # -- (Optional) Enable Accesslog and change Format here...
