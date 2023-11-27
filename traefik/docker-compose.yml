@@ -29,7 +29,7 @@ services:
     ports:
       - "443:443"
       - "80:80"
-      - "8080:8080" # don't enable 8080 on production.
+      # - "8080:8080" # don't enable 8080 on production.
     volumes:
       - "./letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
@@ -37,20 +37,37 @@ services:
     networks:
       - backend
 
-  whoami:
-    image: "traefik/whoami"
-    container_name: "simple-service"
-    # ไม่น่าเกี่ยว
-    depends_on:
-      - traefik
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.whoami.rule=Host(`t.on-the-everything.work`)"
-      - "traefik.http.routers.whoami.entrypoints=web, websecure"
-      - "traefik.http.routers.whoami.tls=true"
-      - "traefik.http.routers.whoami.tls.certresolver=myresolver"
-    networks:
-      - backend
+  # whoami:
+  #   image: "traefik/whoami"
+  #   container_name: "simple-service"
+  #   # ไม่น่าเกี่ยว
+  #   depends_on:
+  #     - traefik
+  #   labels:
+  #     # - "traefik.enable=true"
+  #     # - "traefik.http.routers.whoami.rule=Host(`t.on-the-everything.work`)"
+  #     # - "traefik.http.routers.whoami.entrypoints=web, websecure"
+  #     # - "traefik.http.routers.whoami.tls=true"
+  #     # - "traefik.http.routers.whoami.tls.certresolver=myresolver"
+  #     # - "traefik.enable=true"
+  #     # - "traefik.http.services.whoami.loadbalancer.server.port=80"
+  #     # - "traefik.http.routers.whoami.entrypoints=web, websecure"
+  #     # - "traefik.http.routers.whoami.rule=Host(`t.on-the-everything.work`)"
+  #     # - "traefik.http.routers.whoami.middlewares=redirect-to-https"
+  #     # - "traefik.http.middlewares.redirect-to-https.headers.sslredirect=true"
+  #     # - "traefik.http.middlewares.redirect-to-https.headers.sslProxyHeaders.X-Forwarded-Proto=https"
+  #     # - "traefik.http.services.whoami.loadbalancer.sticky=true"
+  #     - traefik.enable=true
+  #     - traefik.http.routers.whoami.entrypoints=web, websecure
+  #     - traefik.http.routers.whoami.rule=PathPrefix(`/ex-prefix`) && Host(`t.on-the-everything.work`)
+  #     - traefik.http.services.whoami.loadbalancer.server.port=80
+  #     - traefik.http.routers.whoami.tls=true
+  #     - traefik.http.routers.whoami.tls.certresolver=myresolver
+  #     - traefik.http.routers.whoami.middlewares=st
+  #     - traefik.http.middlewares.st.stripprefix.prefixes=/ex-prefix
+
+  #   networks:
+  #     - backend
 
 ## Another example
 # version: "3.1"
@@ -83,10 +100,10 @@ services:
 
 #     labels:
 #       - traefik.enable=true
-#       - traefik.http.routers.backend.rule=PathPrefix(`/ex-prefix`) && Host(`on-the-everything.work`)
-#       - traefik.http.services.backend.loadbalancer.server.port=80
-#       - traefik.http.routers.backend.tls=true
-#       - traefik.http.routers.backend.entrypoints=websecure
-#       - traefik.http.routers.backend.tls.certresolver=let
-#       - traefik.http.routers.backend.middlewares=st
+#       - traefik.http.routers.whoami.rule=PathPrefix(`/ex-prefix`) && Host(`on-the-everything.work`)
+#       - traefik.http.services.whoami.loadbalancer.server.port=80
+#       - traefik.http.routers.whoami.tls=true
+#       - traefik.http.routers.whoami.entrypoints=websecure
+#       - traefik.http.routers.whoami.tls.certresolver=let
+#       - traefik.http.routers.whoami.middlewares=st
 #       - traefik.http.middlewares.st.stripprefix.prefixes=/ex-prefix
